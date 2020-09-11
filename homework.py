@@ -20,12 +20,12 @@ def parse_homework_status(homework):
 
     homework_name = homework.get('homework_name')
     if homework_name is None:
-        print(f'Не удалось получить данные дз, homework_name is None')
         logging.error('Не удалось получить данные дз, homework_name is None')
+        return f'Не удалось получить данные дз, homework_name is None'
     homework_status = homework.get('status')
     if homework_status is None:
-        print(f'Не удалось получить данные дз, homework_status is None')
         logging.error('Не удалось получить данные дз, homework_status is None')
+        return f'Не удалось получить данные дз, homework_status is None'
 
     if homework_status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -61,8 +61,7 @@ def send_message(message):
 
 def main():
     current_timestamp = int(time.time())
-    send_message('hello')
-    time.sleep(50)
+
     while True:
         try:
             new_homework = get_homework_statuses(current_timestamp)
@@ -71,7 +70,7 @@ def main():
                     parse_homework_status(new_homework.get('homeworks')[0]))
             current_timestamp = new_homework.get(
                 'current_date')  # обновить timestamp
-            time.sleep(300)  # опрашивать раз в пять минут
+            time.sleep(200)  # опрашивать раз в пять минут
 
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
