@@ -17,16 +17,15 @@ CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 
 def parse_homework_status(homework):
-    try:
-        homework_name = homework.get('homework_name')
-    except None as e:
-        print(f'Не удалось получить данные дз: {e}')
-        logging.error("Exception occurred", exc_info=True)
-    try:
-        homework_status = homework.get('status')
-    except None as e:
-        print(f'Не удалось получить данные дз: {e}')
-        logging.error("Exception occurred", exc_info=True)
+
+    homework_name = homework.get('homework_name')
+    if homework_name is None:
+        print(f'Не удалось получить данные дз, homework_name is None')
+        logging.error('Не удалось получить данные дз, homework_name is None')
+    homework_status = homework.get('status')
+    if homework_status is None:
+        print(f'Не удалось получить данные дз, homework_status is None')
+        logging.error('Не удалось получить данные дз, homework_status is None')
 
     if homework_status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -37,7 +36,7 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
-    if current_timestamp == None:
+    if current_timestamp is None:
         current_timestamp = int(time.time())
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     url = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
@@ -61,7 +60,7 @@ def send_message(message):
 
 
 def main():
-    current_timestamp = int(time.time())  # начальное значение timestamp
+    current_timestamp = int(time.time())
     while True:
         try:
             new_homework = get_homework_statuses(current_timestamp)
